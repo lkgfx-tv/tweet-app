@@ -15,7 +15,8 @@ model Category {
   name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  products  Post[]
+  posts     Post[]
+  files     File[]
 }
 
 model Post {
@@ -26,4 +27,14 @@ model Post {
   updatedAt  DateTime  @updatedAt
   category   Category? @relation(fields: [categoryId], references: [id])
   categoryId String?   @db.ObjectId
+}
+
+model File {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  url        String
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?   @db.ObjectId
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
