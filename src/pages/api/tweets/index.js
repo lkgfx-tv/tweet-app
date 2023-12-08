@@ -1,4 +1,4 @@
-// API Post handler
+// API Tweet handler
 import Prisma from "@prisma/client";
 import * as yup from "yup";
 const prisma = require("@utils/prismaClient");
@@ -10,12 +10,12 @@ export default async function handler(req, res) {
 
   // Validate params data.
   const schema = yup.object().shape({
-    postId: objectIdValidator,
+    tweetId: objectIdValidator,
     keyword: yup.string().max(255),
     categoryId: objectIdValidator,
   });
 
-  if (req.query.postId || req.query.keyword || req.query.categoryId) {
+  if (req.query.tweetId || req.query.keyword || req.query.categoryId) {
     try {
       validatedParams = await schema.validate(req.query);
     } catch (error) {
@@ -29,13 +29,13 @@ export default async function handler(req, res) {
     switch (method) {
       case "GET":
         try {
-          const posts = await prisma.post.findMany();
+          const tweets = await prisma.tweet.findMany();
           prisma.$disconnect;
-          if (posts === null) {
-            res.status(404).json(`Not found posts.`);
+          if (tweets === null) {
+            res.status(404).json(`Not found tweets.`);
             break;
           }
-          res.status(200).json(posts);
+          res.status(200).json(tweets);
         } catch (err) {
           if (err instanceof Prisma.PrismaClientKnownRequestError) {
             res.status(400).json(`${err}`);
@@ -47,11 +47,11 @@ export default async function handler(req, res) {
         break;
       case "POST":
         try {
-          const posts = await prisma.post.create({
+          const tweet = await prisma.tweet.create({
             data: req.body,
           });
           prisma.$disconnect;
-          res.status(201).json(posts);
+          res.status(201).json(tweet);
         } catch (err) {
           if (err instanceof Prisma.PrismaClientKnownRequestError) {
             if (err.code === "P2002") {
@@ -77,23 +77,23 @@ export default async function handler(req, res) {
     }
   }
 
-  if (validatedParams?.postId) {
+  if (validatedParams?.tweetId) {
     switch (method) {
       case "PATCH":
         try {
-          const postId = validatedParams.postId;
-          const post = await prisma.post.update({
+          const tweetId = validatedParams.tweetId;
+          const tweet = await prisma.tweet.update({
             where: {
-              id: postId,
+              id: tweetId,
             },
             data: req.body,
           });
           prisma.$disconnect;
-          res.status(200).json(post);
+          res.status(200).json(tweet);
         } catch (err) {
           if (err instanceof Prisma.PrismaClientKnownRequestError) {
             if (err.code === "P2025") {
-              res.status(404).json(`Post not found.`);
+              res.status(404).json(`Tweet not found.`);
               break;
             }
             if (err instanceof Prisma.PrismaClientValidationError) {
@@ -107,14 +107,14 @@ export default async function handler(req, res) {
         break;
       case "DELETE":
         try {
-          const postId = validatedParams.postId;
-          const post = await prisma.post.delete({
+          const tweetId = validatedParams.tweetId;
+          const tweet = await prisma.tweet.delete({
             where: {
-              id: postId,
+              id: tweetId,
             },
           });
           prisma.$disconnect;
-          res.status(200).json(`Post ${post.id} deleted successfully.`);
+          res.status(200).json(`Tweet ${tweet.id} deleted successfully.`);
         } catch (err) {
           if (err instanceof Prisma.PrismaClientKnownRequestError) {
             res.status(404).json(`${err.meta.cause}`);
@@ -135,16 +135,16 @@ export default async function handler(req, res) {
       case "GET":
         try {
           const keyword = validatedParams.keyword;
-          const posts = await prisma.post.findMany({
+          const tweets = await prisma.tweet.findMany({
             where: {
               OR: [
                 {
-                  content: {
+                  title: {
                     contains: keyword,
                   },
                 },
                 {
-                  title: {
+                  url: {
                     contains: keyword,
                   },
                 },
@@ -152,11 +152,11 @@ export default async function handler(req, res) {
             },
           });
           prisma.$disconnect;
-          if (posts === null) {
-            res.status(404).json(`Not found posts.`);
+          if (tweets === null) {
+            res.status(404).json(`Not found tweet.`);
             break;
           }
-          res.status(200).json(posts);
+          res.status(200).json(tweets);
         } catch (err) {
           if (err instanceof Prisma.PrismaClientKnownRequestError) {
             res.status(400).json(`${err}`);
@@ -177,17 +177,17 @@ export default async function handler(req, res) {
       case "GET":
         try {
           const categoryId = validatedParams.categoryId;
-          const posts = await prisma.post.findMany({
+          const tweets = await prisma.tweet.findMany({
             where: {
               categoryId: categoryId,
             },
           });
           prisma.$disconnect;
-          if (posts === null) {
-            res.status(404).json(`Not found posts.`);
+          if (tweets === null) {
+            res.status(404).json(`Not found tweets.`);
             break;
           }
-          res.status(200).json(posts);
+          res.status(200).json(tweets);
         } catch (err) {
           if (err instanceof Prisma.PrismaClientKnownRequestError) {
             res.status(400).json(`${err}`);
