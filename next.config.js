@@ -14,6 +14,7 @@ const getCorsHeaders = () => {
 
 const nextConfig = {
   reactStrictMode: true,
+  transpilePackages: ['react-tweet'],
   headers: async () => {
     return [
       {

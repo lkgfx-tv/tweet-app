@@ -8,8 +8,7 @@ import {
 import FilterSelection from "../FilterSelection/FilterSelection";
 import CreateModal from "../CreateModal/CreateModal";
 import TweetForm from "./TweetForm";
-import { TwitterTweetEmbed } from "react-twitter-embed";
-import styles from "./Tweets.module.css";
+import { Tweet } from "react-tweet";
 
 function Tweets(props) {
   const { categories } = props;
@@ -119,41 +118,42 @@ function Tweets(props) {
                   </div>
                 </div>
               ) : (
-                <div className="list-group">
+                <div className="row row-cols-1 row-cols-md-3 g-1">
                   {tweetsList.map((tweet) => (
                     <div
+                      className="col-md-4 mb-3 d-flex"
                       key={tweet.id}
-                      className="list-group-item d-flex justify-content-between"
+                      style={{ minHeight: "300px" }} // Establece la altura mínima para todas las tarjetas
                     >
-                      <div className="d-flex flex-column ">
-                        <h5>{tweet.title}</h5>
-                        <a href={tweet.url} target="_blank" className="">
-                          {tweet.url}
-                        </a>
-                        <div
-                          style={{ width: "100%", marginBottom: "0" }}
-                          className={styles.TweetContainer}
-                        >
-                          <TwitterTweetEmbed
-                            tweetId={`${tweet.url.split("/")[5]}`}
-                          />
+                      <div className="card p-2 w-100 d-flex flex-column justify-content-between">
+                        <Tweet id={`${tweet.url.split("/")[5]}`} />
+                        <div className="card-body">
+                          <h5 className="card-title">{tweet.title}</h5>
+                          <a
+                            href={tweet.url}
+                            target="_blank"
+                            className=""
+                            style={{ fontSize: "15px" }}
+                          >
+                            {tweet.url}
+                          </a>
                         </div>
-                      </div>
-                      <div className="d-flex flex-column justify-content-center align-items-center">
-                        <button
-                          className="btn btn-secondary my-2 px-2"
-                          style={{ height: "40px", width: "80px" }}
-                          onClick={() => copyUrl(tweet.url)}
-                        >
-                          Copy
-                        </button>
-                        <button
-                          className="btn btn-danger my-2 px-2"
-                          style={{ height: "40px", width: "80px" }}
-                          onClick={() => handleDeleteTweet(tweet.id)}
-                        >
-                          Delete
-                        </button>
+                        <div className="d-flex">
+                          <button
+                            className="btn btn-secondary mx-1"
+                            style={{ height: "40px", width: "80px" }}
+                            onClick={() => copyUrl(tweet.url)}
+                          >
+                            Copy
+                          </button>
+                          <button
+                            className="btn btn-danger mx-1"
+                            style={{ height: "40px", width: "80px" }}
+                            onClick={() => handleDeleteTweet(tweet.id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
