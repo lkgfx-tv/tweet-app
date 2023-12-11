@@ -8,10 +8,13 @@ import {
 import FilterSelection from "../FilterSelection/FilterSelection";
 import CreateModal from "../CreateModal/CreateModal";
 import TweetForm from "./TweetForm";
+import { TwitterTweetEmbed } from "react-twitter-embed";
+import styles from "./Tweets.module.css";
 
 function Tweets(props) {
   const { categories } = props;
   const [tweetsList, setTweetsList] = useState([]);
+  const [copyText, setCopyText] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [keyword, setKeyword] = useState("");
   const [loading, setLoading] = useState(true);
@@ -25,6 +28,18 @@ function Tweets(props) {
     fetchData();
     setLoading(false);
   }, []);
+
+  const copyUrl = (url) => {
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        setCopyText(true);
+        setTimeout(() => setCopyText(false), 2000);
+      })
+      .catch((err) => {
+        console.error("Copy error: ", err);
+      });
+  };
 
   const handleSelectChange = async (event) => {
     setLoading(true);
@@ -58,10 +73,10 @@ function Tweets(props) {
   };
 
   return (
-    <div className="container d-flex  mx-auto align-items-center justify-content-center">
+    <div className="container d-flex  w-100 mx-1 pb-3 align-items-center justify-content-center">
       <div className="row justify-content-center w-100">
-        <div className="col-md-8">
-          <div className="card">
+        <div className="col-md-10">
+          <div className="card w-100">
             <div className="card-header">
               <div className="d-flex justify-content-center">
                 <h5 className="card-title p-2 my-2 text-center">Tweets</h5>
@@ -75,7 +90,7 @@ function Tweets(props) {
                     categories={categories}
                     tweetsList={tweetsList}
                     setTweetsList={setTweetsList}
-										setLoading={setLoading}
+                    setLoading={setLoading}
                   />
                 </CreateModal>
               </div>
@@ -108,18 +123,33 @@ function Tweets(props) {
                   {tweetsList.map((tweet) => (
                     <div
                       key={tweet.id}
-                      className="list-group-item list-group-item-action d-flex justify-content-between"
+                      className="list-group-item d-flex justify-content-between"
                     >
-                      <div className="w-90">
+                      <div className="d-flex flex-column ">
                         <h5>{tweet.title}</h5>
                         <a href={tweet.url} target="_blank" className="">
                           {tweet.url}
                         </a>
+                        <div
+                          style={{ width: "100%", marginBottom: "0" }}
+                          className={styles.TweetContainer}
+                        >
+                          <TwitterTweetEmbed
+                            tweetId={`${tweet.url.split("/")[5]}`}
+                          />
+                        </div>
                       </div>
-                      <div className="w-10 d-flex justify-content-center align-items-center">
+                      <div className="d-flex flex-column justify-content-center align-items-center">
+                        <button
+                          className="btn btn-secondary my-2 px-2"
+                          style={{ height: "40px", width: "80px" }}
+                          onClick={() => copyUrl(tweet.url)}
+                        >
+                          Copy
+                        </button>
                         <button
                           className="btn btn-danger my-2 px-2"
-                          style={{ height: "40px" }}
+                          style={{ height: "40px", width: "80px" }}
                           onClick={() => handleDeleteTweet(tweet.id)}
                         >
                           Delete
