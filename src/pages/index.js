@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Tweets from "@/components/Tweets/Tweets";
 import Posts from "@/components/Posts/Posts";
+import Files from "@/components/Files/Files";
 import CreateModal from "@/components/CreateModal/CreateModal";
 import CategoryForm from "@/components/Categories/CategoriesForm";
 import { getCategories } from "@/services/apiFecthServices";
@@ -43,6 +44,7 @@ export default function Home() {
       </CreateModal>
       {showOptions === "tweets" && <Tweets categories={categories} />}
       {showOptions === "posts" && <Posts categories={categories} />}
+      {showOptions === "files" && <Files categories={categories} />}
     </div>
   );
 }

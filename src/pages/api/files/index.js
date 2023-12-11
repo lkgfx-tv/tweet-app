@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     categoryId: objectIdValidator,
   });
 
-  if (req.query.fileId) {
+  if (req.query.fileId || req.query.categoryId || req.query.keyword) {
     try {
       validatedParams = await schema.validate(req.query);
     } catch (error) {
@@ -30,8 +30,8 @@ export default async function handler(req, res) {
         try {
           const files = await prisma.file.findMany();
           prisma.$disconnect;
-          if (posts === null) {
-            res.status(404).json(`Not found posts.`);
+          if (files === null) {
+            res.status(404).json(`Not found files.`);
             break;
           }
           res.status(200).json(files);
@@ -130,6 +130,39 @@ export default async function handler(req, res) {
     }
   }
 
+  if (validatedParams?.keyword) {
+    switch (method) {
+      case "GET":
+        try {
+          const keyword = validatedParams.keyword;
+          const files = await prisma.file.findMany({
+            where: {
+              name: {
+                contains: keyword,
+              },
+            },
+          });
+          prisma.$disconnect;
+          if (files === null) {
+            res.status(404).json(`Not found files.`);
+            break;
+          }
+          res.status(200).json(files);
+        } catch (err) {
+          if (err instanceof Prisma.PrismaClientKnownRequestError) {
+            res.status(400).json(`${err}`);
+            break;
+          }
+          res.status(400).json(`${err}`);
+          break;
+        }
+        break;
+      default:
+        res.status(405).end(`Method ${method} Not Allowed.`);
+        break;
+    }
+  }
+
   if (validatedParams?.categoryId) {
     switch (method) {
       case "GET":
@@ -141,8 +174,8 @@ export default async function handler(req, res) {
             },
           });
           prisma.$disconnect;
-          if (posts === null) {
-            res.status(404).json(`Not found posts.`);
+          if (files === null) {
+            res.status(404).json(`Not found files.`);
             break;
           }
           res.status(200).json(files);

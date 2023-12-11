@@ -107,3 +107,29 @@ export const deleteTweet = async (tweetId) => {
   let params = `/api/tweets?tweetId=${tweetId}`;
   return await deleteData(params);
 };
+
+// Files
+export const getFiles = async () => {
+  let params = `/api/files`;
+  return await getData(params);
+};
+
+export const getFilesByCategory = async (categoryId) => {
+  let params = `/api/files?categoryId=${categoryId}`;
+  return await getData(params);
+};
+
+export const createFile = async (body) => {
+  let params = `/api/files`;
+  return await postData(params, body);
+};
+
+export const getFilesByKeyword = async (keyword) => {
+  let params = `/api/files?keyword=${keyword}`;
+  return await getData(params);
+};
+
+export const deleteFile = async (fileId) => {
+  let params = `/api/files?fileId=${fileId}`;
+  return await deleteData(params);
+};

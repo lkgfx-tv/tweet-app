@@ -13,6 +13,7 @@ function Posts(props) {
   const { categories } = props;
   const [selectedCategory, setSelectedCategory] = useState("");
   const [postsList, setPostsList] = useState([]);
+  const [copyText, setCopyText] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -25,6 +26,18 @@ function Posts(props) {
     fetchData();
     setLoading(false);
   }, []);
+
+  const copyContent = (content) => {
+    navigator.clipboard
+      .writeText(content)
+      .then(() => {
+        setCopyText(true);
+        setTimeout(() => setCopyText(false), 2000);
+      })
+      .catch((err) => {
+        console.error("Copy error: ", err);
+      });
+  };
 
   const handleSelectChange = async (event) => {
 		setLoading(true);
@@ -108,16 +121,23 @@ function Posts(props) {
                   {postsList.map((post) => (
                     <div
                       key={post.id}
-                      className="list-group-item list-group-item-action d-flex justify-content-between"
+                      className="list-group-item d-flex justify-content-between"
                     >
                       <div className="w-90">
                         <h5>{post.title}</h5>
                         <p>{post.content}</p>
                       </div>
-                      <div className="w-10 d-flex justify-content-center align-items-center">
+                      <div className="w-10 d-flex flex-column justify-content-center align-items-center">
+                      <button
+                          className="btn btn-secondary my-2 px-2"
+                          style={{ height: "40px", width: "80px" }}
+                          onClick={() => copyContent(post.content)}
+                        >
+                          Copy
+                        </button>
                         <button
                           className="btn btn-danger my-2 px-2"
-                          style={{ height: "40px" }}
+                          style={{ height: "40px", width: "80px" }}
                           onClick={() => handleDeletePost(post.id)}
                         >
                           Delete
