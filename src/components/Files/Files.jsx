@@ -130,7 +130,11 @@ function Files(props) {
               ) : (
                 <div className="row row-cols-1 row-cols-md-3 g-4">
                   {filesList.map((files) => (
-                    <div className="col-md-3 mb-3" key={files.id}>
+                    <div
+                      className="col-md-3 mb-3"
+                      key={files.id}
+                      style={{ minWidth: "265px" }}
+                    >
                       <div className="card" style={{ maxWidth: "18rem" }}>
                         <img
                           src={files.url}
@@ -142,12 +146,12 @@ function Files(props) {
                             objectFit: "contain",
                           }}
                         />
-                        <div className="card-body">
+                        <div className="card-body w-100">
                           <h5 className="card-title">{files.name}</h5>
                           <a
                             href={files.url}
-                            target="_blank"
                             className="btn btn-primary"
+                            style={{ width: "100px" }}
                           >
                             Download
                           </a>
