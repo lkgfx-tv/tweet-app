@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { createCategory } from "@/services/apiFecthServices";
 import { handleFetchError } from "@utils/handleFetchErrors";
+import { capitalize } from "@utils/capitalizeStr";
 
 function CategoryForm(props) {
   const { categories, setCategories } = props;
-	const [categoryName, setCategoryName] = useState("");
+  const [categoryName, setCategoryName] = useState("");
   const [error, setError] = useState(false);
   const [errorInfo, setErrorInfo] = useState("");
 
@@ -15,9 +16,9 @@ function CategoryForm(props) {
       return;
     }
     const category = {
-      name: categoryName
+      name: capitalize(categoryName),
     };
-    
+
     const newCategory = await createCategory(category);
     if (handleFetchError(newCategory, setError, setErrorInfo)) {
       //setLoading(false);
@@ -29,7 +30,7 @@ function CategoryForm(props) {
 
   const onCloseModal = () => {
     setError(false);
-		setCategoryName("");
+    setCategoryName("");
   };
 
   return (

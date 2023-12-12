@@ -22,7 +22,8 @@ function TweetForm(props) {
       url: tweetUrl,
       categoryId: tweetCategory,
     };
-    if (!tweetCategory?.categoryId) delete tweet.categoryId;
+    console.log("tweet: ", tweet);
+    if (!tweet?.categoryId) delete tweet.categoryId;
     if (!tweetTitle || !tweetUrl) {
       setError(true);
       setErrorInfo("All 'title' and 'url' fields are required");

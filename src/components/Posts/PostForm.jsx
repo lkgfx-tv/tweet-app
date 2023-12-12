@@ -16,13 +16,13 @@ function PostForm(props) {
   };
 
   const handleSubmit = async () => {
-		setLoading(true);
+    setLoading(true);
     const post = {
       title: postTitle,
-    	content: postsContent,
+      content: postsContent,
       categoryId: postCategory,
     };
-    if (!postCategory?.categoryId) delete post.categoryId;
+    if (!post?.categoryId) delete post.categoryId;
     if (!postTitle || !postsContent || !postCategory) {
       setError(true);
       setErrorInfo("All 'titled' and 'content' fields are required");
@@ -35,7 +35,7 @@ function PostForm(props) {
     }
     setPostsList([...postsList, newPost]);
     onCloseModal();
-		setLoading(false);
+    setLoading(false);
   };
 
   const onCloseModal = () => {

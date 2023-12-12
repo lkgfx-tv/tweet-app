@@ -6,7 +6,7 @@ import { handleFetchError } from "@utils/handleFetchErrors";
 // AWS S3
 const config = {
   bucketName: process.env.NEXT_PUBLIC_AWS_STORAGE_BUCKET_NAME,
-  dirName: process.env.NEXT_PUBLIC_AWS_S3_DIR_NAME, 
+  dirName: process.env.NEXT_PUBLIC_AWS_S3_DIR_NAME,
   region: process.env.NEXT_PUBLIC_AWS_S3_REGION_NAME,
   accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
@@ -32,7 +32,7 @@ function FilesForm(props) {
       url: location,
       categoryId: filesCategory,
     };
-    if (!filesCategory?.categoryId) delete file.categoryId;
+    if (!file?.categoryId) delete file.categoryId;
     const newFile = await createFile(file);
     if (handleFetchError(newFile, setError, setErrorInfo)) {
       setLoading(false);
