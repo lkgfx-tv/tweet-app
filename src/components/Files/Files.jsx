@@ -81,6 +81,51 @@ function Files(props) {
     setLoading(false);
   };
 
+  function getFileComponent(files) {
+    const extension = files.url.split(".").pop(); // Obtener la extensión del archivo
+
+    if (
+      extension === "mp4" ||
+      extension === "avi" /* o cualquier extensión de video */
+    ) {
+      return (
+        <video
+          controls
+          style={{
+            maxWidth: "100%",
+            maxHeight: "200px",
+            minHeight: "200px",
+            objectFit: "contain",
+          }}
+        >
+          <source src={files.url} type={`video/${extension}`} />
+          Tu navegador no soporta este video.
+        </video>
+      );
+    } else if (
+      extension === "jpg" ||
+      extension === "jpeg" ||
+      extension === "png" /* o cualquier extensión de imagen */
+    ) {
+      return (
+        <img
+          src={files.url}
+          className="card-img-top"
+          alt={files.name}
+          style={{
+            maxWidth: "100%",
+            maxHeight: "200px",
+            minHeight: "200px",
+            objectFit: "contain",
+          }}
+        />
+      );
+    } else {
+      // Si no es ni imagen ni video, puedes manejarlo de otra manera
+      return <p>No se puede mostrar el archivo.</p>;
+    }
+  }
+
   return (
     <div className="container d-flex  mx-auto align-items-center justify-content-center">
       <div className="row justify-content-center w-100">
@@ -136,16 +181,7 @@ function Files(props) {
                       style={{ minWidth: "265px" }}
                     >
                       <div className="card" style={{ maxWidth: "18rem" }}>
-                        <img
-                          src={files.url}
-                          className="card-img-top"
-                          alt={files.name}
-                          style={{
-                            maxWidth: "100%",
-                            maxHeight: "200px",
-                            objectFit: "contain",
-                          }}
-                        />
+                        {getFileComponent(files)}
                         <div className="card-body w-100">
                           <h5 className="card-title">{files.name}</h5>
                           <a
