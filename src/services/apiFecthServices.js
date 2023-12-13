@@ -1,7 +1,7 @@
 import axios from "axios";
 const API_URL =
   process.env.NODE_ENV === "production"
-    ? "https://tu-aplicacion.vercel.app"
+    ? `${API_URL}`
     : "http://localhost:3000";
 
 const api = axios.create({
