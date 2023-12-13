@@ -121,7 +121,7 @@ function Tweets(props) {
                 <div className="row row-cols-1 row-cols-md-3 g-1">
                   {tweetsList.map((tweet) => (
                     <div
-                      className="col-md-4 mb-3 d-flex"
+                      className="col-md-6 mb-3 d-flex"
                       key={tweet.id}
                       style={{ minHeight: "300px" }} // Establece la altura mínima para todas las tarjetas
                     >
