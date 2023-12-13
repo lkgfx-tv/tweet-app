@@ -141,11 +141,13 @@ export default async function handler(req, res) {
                 {
                   content: {
                     contains: keyword,
+                    mode: "insensitive",
                   },
                 },
                 {
                   title: {
                     contains: keyword,
+                    mode: "insensitive",
                   },
                 },
               ],

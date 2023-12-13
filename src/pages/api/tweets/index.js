@@ -3,6 +3,7 @@ import Prisma from "@prisma/client";
 import * as yup from "yup";
 const prisma = require("@utils/prismaClient");
 const objectIdValidator = require("@utils/objectIdSchema");
+import { capitalize } from "@utils/capitalizeStr";
 
 export default async function handler(req, res) {
   const method = req.method;
@@ -13,9 +14,15 @@ export default async function handler(req, res) {
     tweetId: objectIdValidator,
     keyword: yup.string().max(255),
     categoryId: objectIdValidator,
+    // categories: yup.string().max(255),
   });
 
-  if (req.query.tweetId || req.query.keyword || req.query.categoryId) {
+  if (
+    req.query.tweetId ||
+    req.query.keyword ||
+    req.query.categoryId // ||
+    // req.query.categories
+  ) {
     try {
       validatedParams = await schema.validate(req.query);
     } catch (error) {
@@ -141,11 +148,13 @@ export default async function handler(req, res) {
                 {
                   title: {
                     contains: keyword,
+                    mode: "insensitive",
                   },
                 },
                 {
                   url: {
                     contains: keyword,
+                    mode: "insensitive",
                   },
                 },
               ],
@@ -202,4 +211,52 @@ export default async function handler(req, res) {
         break;
     }
   }
+
+  // if (validatedParams?.categories) {
+  //   switch (method) {
+  //     case "GET":
+  //       try {
+  //         const categories = validatedParams.categories;
+  //         const tweets = [];
+  //         const categoriesList = categories.split(",");
+  //         console.log(categoriesList);
+
+  //         await Promise.all(
+  //           categoriesList.map(async (category) => {
+  //             const tweetsByCategory = await prisma.tweet.findMany({
+  //               where: {
+  //                 category: {
+  //                   name: {
+  //                     contains: category.trim(),
+  //                     mode: "insensitive",
+  //                   },
+  //                 },
+  //               },
+  //             });
+  //             tweets.push(...tweetsByCategory);
+  //           })
+  //         );
+
+  //         console.log({ tweets });
+
+  //         prisma.$disconnect;
+  //         if (tweets === null) {
+  //           res.status(404).json(`Not found tweets.`);
+  //           break;
+  //         }
+  //         res.status(200).json(tweets);
+  //       } catch (err) {
+  //         if (err instanceof Prisma.PrismaClientKnownRequestError) {
+  //           res.status(400).json(`${err}`);
+  //           break;
+  //         }
+  //         res.status(400).json(`${err}`);
+  //         break;
+  //       }
+  //       break;
+  //     default:
+  //       res.status(405).end(`Method ${method} Not Allowed.`);
+  //       break;
+  //   }
+  // }
 }
